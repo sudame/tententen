@@ -1,19 +1,20 @@
 name: learn-github-actions
-on: [push]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
 jobs:
   build-pandoc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - run: apt-get update
-      # - run: apt-get install -y pandoc
-      # - run: pandoc 2021-11-22.md -s -t html -o 2021-11-22.html
-      - run: touch hoge.txt
-      - run: ls -la
+      - uses: ./.github/actions/build-with-pandoc
       - run: git config --global user.name "tententen bot"
       - run: git config --global user.email "s@sudame.net"
-      - run: git checkout -b pages
-      - run: git add .
+      - run: git branch -cf pages
+      - run: git checkout pages
+      - run: git add **/*.html
       - run: git commit -m 'tententen update'
-      # - run: git remote set-url origin https://github.com:${GITHUB_TOKEN}@github.com/sudame/tententen.me.git
-      # - run: git push origin pages
+      - run: git remote set-url origin https://${{secrets.GITHUB_TOKEN}}@github.com/sudame/tententen.me.git
+      - run: git push -f origin pages

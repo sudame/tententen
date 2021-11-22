@@ -1,0 +1,5 @@
+name: "Get Commit Summary"
+description: "Get commits from previrous tag to new tag"
+runs:
+  using: "docker"
+  image: "Dockerfile"
